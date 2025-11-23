@@ -2,39 +2,50 @@ const stompClient = new StompJs.Client({
     brokerURL: 'ws://localhost:8080/minj-L/realTimeStock'
 });
 
+let labels = [];
+let buyData = [];
+let sellData = [];
+
+// Chart.js 초기화
+const ctx = document.getElementById('stockChart').getContext('2d');
+const stockChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [
+            {label: '매수', data: buyData, borderColor: 'red', fill: false, spanGaps: true},
+            {label: '매도', data: sellData, borderColor: 'blue', fill: false, spanGaps: true}
+        ]
+    },
+    options: {
+        responsive: true,
+        animation: false,
+        scales: {
+            x: {title: {display: true, text: '시간'}},
+            y: {title: {display: true, text: '가격'}}
+        }
+    }
+});
+
 stompClient.onConnect = (frame) => {
     setConnected(true);
     console.log('Connected: ' + frame);
 
-    stompClient.subscribe('/stock/buyStock', (message) => {
-        showBuyingResult(JSON.parse(message.body));
-    });
-
-    stompClient.subscribe('/stock/sellStock', (message) => {
-        showSellingResult(JSON.parse(message.body));
-    });
+    stompClient.subscribe('/stock/buyStock', (message) => showBuyingResult(JSON.parse(message.body)));
+    stompClient.subscribe('/stock/sellStock', (message) => showSellingResult(JSON.parse(message.body)));
 };
 
-stompClient.onWebSocketError = (error) => {
-    console.error('Error with websocket', error);
-};
-
+stompClient.onWebSocketError = console.error;
 stompClient.onStompError = (frame) => {
-    console.error('Broker reported error: ' + frame.headers['message']);
-    console.error('Additional details: ' + frame.body);
+    console.error('Broker error:', frame.headers['message'], frame.body);
 };
 
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
-    if (connected) {
-        $("#conversation").show();
-    } else {
-        $("#conversation").hide();
-    }
-    $("#greetings").html("");
 }
 
+// WebSocket 연결/해제
 function connect() {
     stompClient.activate();
 }
@@ -42,56 +53,71 @@ function connect() {
 function disconnect() {
     stompClient.deactivate();
     setConnected(false);
-    console.log("Disconnected");
 }
 
+// 매수/매도 요청 보내기
 function sendBuyingStock() {
-    const request = {
-        stockName: $("#stockName").val(),
-        quantity: Number($("#quantity").val())
-    };
-
     stompClient.publish({
         destination: "/app/trade/buyingStock",
-        body: JSON.stringify(request)
+        body: JSON.stringify({stockName: $("#stockName").val(), quantity: Number($("#quantity").val())})
     });
 }
 
 function sendSellingStock() {
-    const request = {
-        stockName: $("#stockName").val(),
-        quantity: Number($("#quantity").val())
-    };
     stompClient.publish({
         destination: "/app/trade/sellingStock",
-        body: JSON.stringify(request)
+        body: JSON.stringify({stockName: $("#stockName").val(), quantity: Number($("#quantity").val())})
     });
 }
 
+// 거래 결과 화면 출력
 function showBuyingResult(result) {
-    $("#buyingResult").append(
-        `<tr>
-            <td>${result.stockName}</td>
-            <td class="buying">${result.finalPrice}</td>
-            <td class="buying">${result.quantity}</td>
-        </tr>`
-    );
+    appendTable(result, 'buying');
+    updateChart(result, 'buy');
 }
 
 function showSellingResult(result) {
+    appendTable(result, 'selling');
+    updateChart(result, 'sell');
+}
+
+function appendTable(result, type) {
     $("#buyingResult").append(
         `<tr>
             <td>${result.stockName}</td>
-            <td class="selling">${result.finalPrice}</td>
-            <td class="selling">${result.quantity}</td>
+            <td class="${type}">${result.finalPrice}</td>
+            <td class="${type}">${result.quantity}</td>
         </tr>`
     );
 }
 
+// 실시간 그래프 업데이트
+function updateChart(result, type) {
+    const now = new Date().toLocaleTimeString();
+    labels.push(now);
+
+    if (type === 'buy') {
+        buyData.push(result.finalPrice);
+        sellData.push(null);
+    } else {
+        buyData.push(null);
+        sellData.push(result.finalPrice);
+    }
+
+    // 최근 20개만
+    if (labels.length > 20) {
+        labels.shift();
+        buyData.shift();
+        sellData.shift();
+    }
+
+    stockChart.update();
+}
+
+// 버튼 이벤트
 $(function () {
-    $("form").on('submit', (e) => e.preventDefault());
-    $("#connect").click(() => connect());
-    $("#disconnect").click(() => disconnect());
-    $("#buyStockBtn").click(() => sendBuyingStock());
-    $("#sellStockBtn").click(() => sendSellingStock());
+    $("#connect").click(connect);
+    $("#disconnect").click(disconnect);
+    $("#buyStockBtn").click(sendBuyingStock);
+    $("#sellStockBtn").click(sendSellingStock);
 });

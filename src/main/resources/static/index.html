@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hello WebSocket</title>
+    <title>Real-Time Stock Simulator</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link href="/main.css" rel="stylesheet">
+          crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
-    <script src="/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         table.table-bordered td.buying {
             color: red;
@@ -21,47 +20,40 @@
     </style>
 </head>
 <body>
-<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
-    enabled. Please enable
-    Javascript and reload this page!</h2></noscript>
-<div id="main-content" class="container">
-    <div class="row">
+<div class="container">
+    <!-- WebSocket 연결 버튼 -->
+    <div class="row" style="margin-top: 20px;">
         <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="connect">WebSocket connection:</label>
-                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
-                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
-                    </button>
-                </div>
-            </form>
+            <button id="connect" class="btn btn-default">Connect</button>
+            <button id="disconnect" class="btn btn-default" disabled>Disconnect</button>
         </div>
     </div>
 
+    <!-- 실시간 그래프 -->
+    <div class="row" style="margin-top: 30px;">
+        <div class="col-md-12">
+            <h3>실시간 매수/매도 그래프</h3>
+            <canvas id="stockChart"></canvas>
+        </div>
+    </div>
+
+    <!-- 매수/매도 폼 -->
     <div class="row" style="margin-top: 20px;">
         <div class="col-md-12">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="stockName">Stock:</label>
-                    <input type="text" id="stockName" class="form-control" placeholder="종목명">
-                </div>
+            <div class="form-inline">
+                <label for="stockName">종목명 : </label>
+                <input type="text" id="stockName" class="form-control" placeholder="종목명">
 
-                <div class="form-group" style="margin-left: 10px;">
-                    <label for="quantity">Quantity:</label>
-                    <input type="number" id="quantity" class="form-control" placeholder="수량">
-                </div>
+                <label for="quantity" style="margin-left: 10px;">수량 : </label>
+                <input type="number" id="quantity" class="form-control" placeholder="수량" style="margin-left: 10px;">
 
-                <button id="buyStockBtn" class="btn btn-danger" type="button" style="margin-left: 10px;">
-                    매수하기
-                </button>
-
-                <button id="sellStockBtn" class="btn btn-primary" type="button" style="margin-left: 10px;">
-                    매도하기
-                </button>
-            </form>
+                <button id="buyStockBtn" class="btn btn-danger" type="button" style="margin-left: 10px;">매수하기</button>
+                <button id="sellStockBtn" class="btn btn-primary" type="button" style="margin-left: 10px;">매도하기</button>
+            </div>
         </div>
     </div>
 
+    <!-- 거래 결과 테이블 -->
     <div class="row" style="margin-top: 30px;">
         <div class="col-md-12">
             <h3>거래 결과</h3>
@@ -73,11 +65,12 @@
                     <th>수량</th>
                 </tr>
                 </thead>
-                <tbody id="buyingResult">
-                </tbody>
+                <tbody id="buyingResult"></tbody>
             </table>
         </div>
     </div>
 </div>
+
+<script src="/app.js"></script>
 </body>
 </html>
