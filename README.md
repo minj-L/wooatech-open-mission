@@ -36,8 +36,8 @@ git clone https://github.com/minj-L/wooatech-open-mission.git
 cd .\wooatech-open-mission\
 ./gradlew clean build -x test
 
-3️⃣ 빌드된 JAR 확인 (예: build/libs/real-time-stock-0.0.1-SNAPSHOT.jar)
-java -jar build/libs/real-time-stock-0.0.1-SNAPSHOT.jar
+3️⃣ 빌드된 JAR 확인
+java -jar .\build\libs\wooatech-open-mission-1.0-SNAPSHOT.jar
 
 4️⃣ 브라우저에서 접속
 http://localhost:8080
