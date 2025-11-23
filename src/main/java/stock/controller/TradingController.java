@@ -14,4 +14,10 @@ public class TradingController {
     public BuyingResult buyingStock(BuyingStock buyingStock) {
         return BuyingResult.finalPrice(buyingStock);
     }
+
+    @MessageMapping("/trade/sellingStock")
+    @SendTo("/stock/sellStock")
+    public BuyingResult sellingStock(BuyingStock buyingStock) {
+        return BuyingResult.sellFinalPrice(buyingStock);
+    }
 }

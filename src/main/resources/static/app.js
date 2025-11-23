@@ -9,6 +9,10 @@ stompClient.onConnect = (frame) => {
     stompClient.subscribe('/stock/buyStock', (message) => {
         showBuyingResult(JSON.parse(message.body));
     });
+
+    stompClient.subscribe('/stock/sellStock', (message) => {
+        showSellingResult(JSON.parse(message.body));
+    });
 };
 
 stompClient.onWebSocketError = (error) => {
@@ -41,7 +45,6 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-// ⭐ 매수 요청 보내기
 function sendBuyingStock() {
     const request = {
         stockName: $("#stockName").val(),
@@ -54,10 +57,34 @@ function sendBuyingStock() {
     });
 }
 
-// ⭐ 매수 결과를 화면에 출력
+function sendSellingStock() {
+    const request = {
+        stockName: $("#stockName").val(),
+        quantity: Number($("#quantity").val())
+    };
+    stompClient.publish({
+        destination: "/app/trade/sellingStock",
+        body: JSON.stringify(request)
+    });
+}
+
 function showBuyingResult(result) {
     $("#buyingResult").append(
-        `<tr><td>${result.stockName}</td><td>${result.finalPrice}</td><td>${result.quantity}</td></tr>`
+        `<tr>
+            <td>${result.stockName}</td>
+            <td class="buying">${result.finalPrice}</td>
+            <td class="buying">${result.quantity}</td>
+        </tr>`
+    );
+}
+
+function showSellingResult(result) {
+    $("#buyingResult").append(
+        `<tr>
+            <td>${result.stockName}</td>
+            <td class="selling">${result.finalPrice}</td>
+            <td class="selling">${result.quantity}</td>
+        </tr>`
     );
 }
 
@@ -65,6 +92,6 @@ $(function () {
     $("form").on('submit', (e) => e.preventDefault());
     $("#connect").click(() => connect());
     $("#disconnect").click(() => disconnect());
-    // ⭐ 매수 버튼
     $("#buyStockBtn").click(() => sendBuyingStock());
+    $("#sellStockBtn").click(() => sendSellingStock());
 });

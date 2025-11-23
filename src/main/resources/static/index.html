@@ -8,6 +8,17 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
     <script src="/app.js"></script>
+    <style>
+        table.table-bordered td.buying {
+            color: red;
+            font-weight: bold;
+        }
+
+        table.table-bordered td.selling {
+            color: blue;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 <noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
@@ -40,8 +51,12 @@
                     <input type="number" id="quantity" class="form-control" placeholder="수량">
                 </div>
 
-                <button id="buyStockBtn" class="btn btn-primary" type="submit" style="margin-left: 10px;">
+                <button id="buyStockBtn" class="btn btn-danger" type="button" style="margin-left: 10px;">
                     매수하기
+                </button>
+
+                <button id="sellStockBtn" class="btn btn-primary" type="button" style="margin-left: 10px;">
+                    매도하기
                 </button>
             </form>
         </div>
@@ -49,7 +64,7 @@
 
     <div class="row" style="margin-top: 30px;">
         <div class="col-md-12">
-            <h3>매수 결과</h3>
+            <h3>거래 결과</h3>
             <table class="table table-bordered">
                 <thead>
                 <tr>

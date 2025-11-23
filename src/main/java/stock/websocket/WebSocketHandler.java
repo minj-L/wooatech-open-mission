@@ -13,4 +13,8 @@ public class WebSocketHandler {
     public void sendBuyingResult(BuyingResult result) {
         template.convertAndSend("/stock/buyStock", result);
     }
+
+    public void sendSellingResult(BuyingResult sellingResult) {
+        template.convertAndSend("/stock/sellStock", sellingResult);
+    }
 }

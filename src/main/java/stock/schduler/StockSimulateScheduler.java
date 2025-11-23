@@ -13,13 +13,27 @@ public class StockSimulateScheduler {
     private final SimulatorService simulatorService;
     private final WebSocketHandler webSocketHandler;
 
-    @Scheduled(fixedRate = 2000)
+    @Scheduled(fixedRate = 1000)
     public void buyingSimulator() {
-        int randomShare = simulatorService.generateRandomShare();
+        int randomBuyShare = simulatorService.generateBuyRandomShare();
         BuyingResult result = BuyingResult.finalPrice(
-                simulatorService.simulBuyintStock(randomShare)
+                simulatorService.simulBuyingStock(randomBuyShare)
         );
 
         webSocketHandler.sendBuyingResult(result);
+    }
+
+    @Scheduled(fixedRate = 5000)
+    public void sellingSimulator() {
+        try {
+            int randomSellShare = simulatorService.generateSellRandomShare();
+            BuyingResult sellingResult = BuyingResult.sellFinalPrice(
+                    simulatorService.simulSellingStock(randomSellShare)
+            );
+
+            webSocketHandler.sendSellingResult(sellingResult);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
