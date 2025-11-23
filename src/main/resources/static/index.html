@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Real-Time Stock Simulator</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        table.table-bordered td.buying {
+            color: red;
+            font-weight: bold;
+        }
+
+        table.table-bordered td.selling {
+            color: blue;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- WebSocket 연결 버튼 -->
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-md-6">
+            <button id="connect" class="btn btn-default">Connect</button>
+            <button id="disconnect" class="btn btn-default" disabled>Disconnect</button>
+        </div>
+    </div>
+
+    <!-- 실시간 그래프 -->
+    <div class="row" style="margin-top: 30px;">
+        <div class="col-md-12">
+            <h3>실시간 매수/매도 그래프</h3>
+            <canvas id="stockChart"></canvas>
+        </div>
+    </div>
+
+    <!-- 매수/매도 폼 -->
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-md-12">
+            <div class="form-inline">
+                <label for="stockName">종목명 : </label>
+                <input type="text" id="stockName" class="form-control" placeholder="종목명">
+
+                <label for="quantity" style="margin-left: 10px;">수량 : </label>
+                <input type="number" id="quantity" class="form-control" placeholder="수량" style="margin-left: 10px;">
+
+                <button id="buyStockBtn" class="btn btn-danger" type="button" style="margin-left: 10px;">매수하기</button>
+                <button id="sellStockBtn" class="btn btn-primary" type="button" style="margin-left: 10px;">매도하기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 거래 결과 테이블 -->
+    <div class="row" style="margin-top: 30px;">
+        <div class="col-md-12">
+            <h3>거래 결과</h3>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>종목명</th>
+                    <th>최종 가격</th>
+                    <th>수량</th>
+                </tr>
+                </thead>
+                <tbody id="buyingResult"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
