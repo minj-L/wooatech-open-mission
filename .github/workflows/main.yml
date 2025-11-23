@@ -3,7 +3,7 @@ name: Build and Deploy Docker
 on:
   push:
     branches:
-      - feature/stock-trading
+      - main
   workflow_dispatch:
 
 jobs:
@@ -44,5 +44,5 @@ jobs:
 
       - name: Push Docker image
         run: |
-          docker tag real-time-stock:latest <your-dockerhub-username>/real-time-stock:latest
-          docker push <your-dockerhub-username>/real-time-stock:latest
+          docker tag real-time-stock:latest ${{ secrets.DOCKER_USERNAME }}/real-time-stock:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/real-time-stock:latest
