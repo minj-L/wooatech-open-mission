@@ -6,7 +6,7 @@ import stock.dto.OrderStock;
 @Service
 public class SimulatorService {
     private final int MAX_BUY_SHARE = 5000;
-    private final int MAX_SELL_SHARE = 1000;
+    private final int MAX_SELL_SHARE = 3000;
 
     public OrderStock simulBuyingStock(int share) {
         return new OrderStock("apple", share);

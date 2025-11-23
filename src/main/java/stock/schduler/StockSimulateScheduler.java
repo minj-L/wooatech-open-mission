@@ -13,7 +13,7 @@ public class StockSimulateScheduler {
     private final WebSocketHandler webSocketHandler;
     private final SimulatorService simulatorService;
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 3000)
     public void buyingSimulator() {
         int randomBuyShare = simulatorService.generateBuyRandomShare();
         OrderResult result = OrderResult.buyFinalPrice(
