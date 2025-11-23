@@ -3,21 +3,21 @@ package stock.controller;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import stock.domain.BuyingResult;
-import stock.dto.BuyingStock;
+import stock.domain.OrderResult;
+import stock.dto.OrderStock;
 
 @Controller
 public class TradingController {
 
     @MessageMapping("/trade/buyingStock")
     @SendTo("/stock/buyStock")
-    public BuyingResult buyingStock(BuyingStock buyingStock) {
-        return BuyingResult.finalPrice(buyingStock);
+    public OrderResult buyingStock(OrderStock buyingStock) {
+        return OrderResult.buyFinalPrice(buyingStock);
     }
 
     @MessageMapping("/trade/sellingStock")
     @SendTo("/stock/sellStock")
-    public BuyingResult sellingStock(BuyingStock buyingStock) {
-        return BuyingResult.sellFinalPrice(buyingStock);
+    public OrderResult sellingStock(OrderStock sellingStock) {
+        return OrderResult.sellFinalPrice(sellingStock);
     }
 }

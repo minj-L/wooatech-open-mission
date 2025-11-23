@@ -5,13 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import stock.constants.StockConstants;
-import stock.dto.BuyingStock;
+import stock.dto.OrderStock;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BuyingResult {
+public class OrderResult {
     public static int primitivePrice = 4200;
 
     private String stockName;
@@ -20,8 +20,8 @@ public class BuyingResult {
 
     // 1주씩 매수할 때마다 주가가 10호가 단위만큼 오른다고 가정
     // 매수
-    public static BuyingResult finalPrice(BuyingStock buyingStock) {
-        return new BuyingResult(
+    public static OrderResult buyFinalPrice(OrderStock buyingStock) {
+        return new OrderResult(
                 buyingStock.getStockName(),
                 buyStock(buyingStock.getQuantity()),
                 buyingStock.getQuantity()
@@ -29,8 +29,8 @@ public class BuyingResult {
     }
 
     // 매도
-    public static BuyingResult sellFinalPrice(BuyingStock sellingStock) {
-        return new BuyingResult(
+    public static OrderResult sellFinalPrice(OrderStock sellingStock) {
+        return new OrderResult(
                 sellingStock.getStockName(),
                 sellStock(sellingStock.getQuantity()),
                 sellingStock.getQuantity()
