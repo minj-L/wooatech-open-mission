@@ -1,12 +1,13 @@
 const stompClient = new StompJs.Client({
-    brokerURL: 'ws://localhost:8080/gs-guide-websocket'
+    brokerURL: 'ws://localhost:8080/minj-L/realTimeStock'
 });
 
 stompClient.onConnect = (frame) => {
     setConnected(true);
     console.log('Connected: ' + frame);
-    stompClient.subscribe('/topic/greetings', (greeting) => {
-        showGreeting(JSON.parse(greeting.body).content);
+
+    stompClient.subscribe('/stock/buyStock', (message) => {
+        showBuyingResult(JSON.parse(message.body));
     });
 };
 
@@ -40,20 +41,30 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function sendName() {
+// ⭐ 매수 요청 보내기
+function sendBuyingStock() {
+    const request = {
+        stockName: $("#stockName").val(),
+        quantity: Number($("#quantity").val())
+    };
+
     stompClient.publish({
-        destination: "/app/hello",
-        body: JSON.stringify({'name': $("#name").val()})
+        destination: "/app/trade/buyingStock",
+        body: JSON.stringify(request)
     });
 }
 
-function showGreeting(message) {
-    $("#greetings").append("<tr><td>" + message + "</td></tr>");
+// ⭐ 매수 결과를 화면에 출력
+function showBuyingResult(result) {
+    $("#buyingResult").append(
+        `<tr><td>${result.stockName}</td><td>${result.finalPrice}</td><td>${result.quantity}</td></tr>`
+    );
 }
 
 $(function () {
     $("form").on('submit', (e) => e.preventDefault());
     $("#connect").click(() => connect());
     $("#disconnect").click(() => disconnect());
-    $("#send").click(() => sendName());
+    // ⭐ 매수 버튼
+    $("#buyStockBtn").click(() => sendBuyingStock());
 });
