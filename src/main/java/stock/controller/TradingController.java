@@ -12,6 +12,6 @@ public class TradingController {
     @MessageMapping("/trade/buyingStock")
     @SendTo("/stock/buyStock")
     public BuyingResult buyingStock(BuyingStock buyingStock) {
-        return BuyingResult.fianlPrice(buyingStock);
+        return BuyingResult.finalPrice(buyingStock);
     }
 }

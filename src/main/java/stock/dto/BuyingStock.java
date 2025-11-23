@@ -12,5 +12,4 @@ import lombok.Setter;
 public class BuyingStock {
     private String stockName;
     private int quantity;
-    private int price;
 }
