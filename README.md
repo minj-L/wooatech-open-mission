@@ -16,22 +16,28 @@
 ### 🐳 Docker로 로컬 실행
 
 ```bash
-1️⃣ Docker 이미지 빌드
-docker build -t real-time-stock .
+1️⃣ Docker 이미지 Pull
+docker pull minjo0310/real-time-stock:latest
 
 2️⃣ 컨테이너 실행
-docker run -p 8080:8080 real-time-stock
+docker run -p 8080:8080 minjo0310/real-time-stock:latest
 
 3️⃣ 브라우저에서 접속
 http://localhost:8080
 ```
 
-### 🚀 Docker없이 바로 실행
+### 🚀 Docker없이 실행(소스코드 다운로드 필요)
 
 ```
-1️⃣ Gradle로 실행
-./gradlew bootRun
+1️⃣ git clone
+git clone https://github.com/minj-L/wooatech-open-mission.git
 
-2️⃣ 브라우저에서 접속
+2️⃣ 프로젝트 루트에서 Gradle 빌드
+./gradlew clean build -x test
+
+3️⃣ 빌드된 JAR 확인 (예: build/libs/real-time-stock-0.0.1-SNAPSHOT.jar)
+java -jar build/libs/real-time-stock-0.0.1-SNAPSHOT.jar
+
+4️⃣ 브라우저에서 접속
 http://localhost:8080
 ```
