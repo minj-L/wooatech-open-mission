@@ -3,7 +3,8 @@ name: Build and Deploy Docker
 on:
   push:
     branches:
-      - feature/stock-trading
+      - main
+      - 'feature/**'
   workflow_dispatch:
 
 jobs:
